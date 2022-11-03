@@ -21,7 +21,7 @@ namespace SwiggyAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllProducts()
         {
-               var products = await _context.Products.ToListAsync();
+            var products = await _context.Products.ToListAsync();
             return Ok(products);
         }
         [HttpPost]
@@ -30,6 +30,17 @@ namespace SwiggyAPI.Controllers
             await _context.Products.AddAsync(p);
             await _context.SaveChangesAsync();
             return Ok(p);
+        }
+        [HttpGet]
+        [Route("{id:int}")]
+        public async Task<IActionResult> GetProduct([FromRoute] int id)
+        {
+            var product = await _context.Products.FirstOrDefaultAsync(x => x.ProductId == id);
+            if(product==null)
+            {
+                return NotFound();
+            }
+            return Ok(product);
         }
         [HttpDelete]
         public async Task<IActionResult>DeleteProduct([FromBody] int ProductId)
